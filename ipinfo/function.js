@@ -88,7 +88,7 @@ function generateImage() {
 
         // 设置字体样式
         ctx.fillStyle = "#39c5bb";
-        ctx.font = "14px Arial"; // Chrome 46 可能不支持自定义字体
+        ctx.font = "12px Arial"; // Chrome 46 可能不支持自定义字体
 
         // 绘制文本
         ctx.fillText("欢迎您来自 " + country + "-" + province + "-" + city + " 的朋友", 10, 25);
@@ -104,7 +104,7 @@ function generateImage() {
             var kv = pair.split("=");
             if (kv[0] === "s") {
                 var decodedText = atob(decodeURIComponent(kv[1]).replace(/ /g, "+"));
-                ctx.font = "15px Arial";
+                ctx.font = "12px Arial";
                 ctx.fillText(decodedText, 10, 210);
             }
         });
