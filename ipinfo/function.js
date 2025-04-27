@@ -1,4 +1,5 @@
 // 背景图自适应绘制函数（类似 CSS 的 background-size: cover）
+"use strict";
 function drawCoverImage(ctx, img, canvasWidth, canvasHeight) {
     const imgRatio = img.width / img.height;
     const canvasRatio = canvasWidth / canvasHeight;
