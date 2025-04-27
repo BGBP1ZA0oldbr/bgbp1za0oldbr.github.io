@@ -49,7 +49,7 @@ function generateImage() {
         // 3. 替换 fetch → 用 XMLHttpRequest（Chrome 46 不支持 fetch）
         return new Promise(function(resolve) {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "https://ipapi.co/json/", true);
+            xhr.open("GET", "http://ipapi.co/json/", true);
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     try {
