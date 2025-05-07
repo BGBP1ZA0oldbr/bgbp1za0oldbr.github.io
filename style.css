@@ -167,6 +167,10 @@ input[type="text"] {
 	padding-left: 5px;
         padding-right: 5px;
     }
+	.shengyiwu-list p img{
+            width: 100%;
+            
+        }
 }
 @media screen and (max-height:600px){
     body{
@@ -195,4 +199,9 @@ input[type="text"] {
 	    padding-left: 5px;
             padding-right: 5px;
         }
+	.shengyiwu-list p img{
+            width: 100%;
+            
+        }
+	
 }
