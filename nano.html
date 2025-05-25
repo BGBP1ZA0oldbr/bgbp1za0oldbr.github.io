@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录</title>
+    <link rel="stylesheet" href="./备忘录_files/style.css">
+    <link rel="icon" href="https://bgbp1za0.github.io/favicon.ico">
+</head>
+
+<body>
+
+    <header>
+        <ul class="ys-head">
+            <li><a href="https://bgbp1za0.github.io/index.html">首页</a></li>
+            <li><a href="https://bgbp1za0.github.io/bayinhe.html">八音盒</a></li>
+            <li><a href="https://bgbp1za0.github.io/shop.html">商城</a></li>
+            <li><a href="https://ys.mihoyo.com/cloud/#/">云原神</a></li>
+            <li><a href="https://bgbp1za0.github.io/tools.html">工具合集</a></li>
+        </ul>
+    </header>
+
+    <nav class="banner">
+        <img src="./备忘录_files/bann.png" alt="">
+    </nav>
+    <h1>临时备忘录</h1>
+
+    <div class="shengyiwu-list">
+        <p style="color: red;">在此处复制或输入待保存为txt文本文档的文字。</p><br>
+        <textarea id="memo-text" placeholder="在这里复制内容"></textarea><br>
+        <input type="text" id="filename-input" value="text" placeholder="输入文件名 (可选)">
+        <button id="download-btn">下载为txt</button>
+    </div>
+
+    <script>
+        const memoText = document.getElementById('memo-text');
+        const downloadBtn = document.getElementById('download-btn');
+        const filenameInput = document.getElementById('filename-input');
+
+        downloadBtn.addEventListener('click', () => {
+            const text = memoText.value;
+            const filename = filenameInput.value.trim() || "text.txt";
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+
+            if (text) {
+                if (navigator.msSaveBlob) {
+                    navigator.msSaveBlob(blob, filename);
+                } else {
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.href = url;
+                    link.download = filename + (filename.endsWith('.txt') ? '' : '.txt');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }
+            } else {
+                alert("备忘录内容为空，无法下载！");
+            }
+        });
+
+        
+
+        
+    </script>
+
+
+
+
+</body></html>
