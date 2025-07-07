@@ -25,10 +25,12 @@
     <div class="shengyiwu-list">
         <h1>常见问题回答</h1>
         <h3>问：为什么图片加载不出来/IP显示为未知？</h3><br>
-        <p>答：因为旧的浏览器不支持现在的HTTPS请求和响应，故浏览器将外部api的部分请求和响应一律视为不安全的连接。<br>
-        可行的解决方法是允许对这些网站的请求，具体操作如下：<br>
+        <p>答：因为旧的操作系统对现代SSL证书的支持受限，故浏览器将外部api的部分请求和响应一律视为不安全的连接。<br>
+        可行的，最直接的解决方法是手动允许对这些网站的请求，具体操作如下：<br>
         如ip未知，访问https://ipapi.co/json <br>
-        如材料图片加载失败，访问https://patchwiki.biligame.com <br><br>
+        如材料图片加载失败，访问https://patchwiki.biligame.com <br>
+        如角色图片加载失败，访问https://uploadstatic.mihoyo.com <br>
+        如武器图片加载失败，访问https://act-upload.mihoyo.com <br><br>
         之后会有如下提示，单击高级：<br>
         <img src="faq/q1_1.png" alt="" width="600px"><br><br>
         再单击“继续前往****”<br>
