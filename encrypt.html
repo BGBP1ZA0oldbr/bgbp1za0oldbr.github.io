@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name='description' content='原站-AES 离线加密工具'>
     <title>AES 离线加密工具</title>
-    <script src="scripts/crypto-js.min.js"></script>
+    <script src="scripts/oldencrypt.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico">
     <style>
@@ -64,82 +64,80 @@
     </div>
 
     <script>
-        "use strict";
+    // 加密逻辑
+function handleEncrypt() {
+    var content = document.getElementById('input').value;
+    var password = document.getElementById('pwd').value;
+    
+    if (!content || !password) {
+        showMsg("内容和密码都不能少哦！", "#dc3545");
+        return;
+    }
 
-        // 提示信息处理 (兼容老版本浏览器)
-        function showMsg(text, color) {
-            var msg = document.getElementById('msg');
-            msg.innerText = text;
-            msg.style.color = color || "#666";
-            setTimeout(function() {
-                if (msg.innerText === text) {
-                    msg.innerText = "";
-                }
-            }, 3000);
-        }
+    try {
+        var encrypted = CryptoJS.AES.encrypt(content, password).toString();
+        document.getElementById('output').value = encrypted;
+        showMsg("加密成功！请妥善保存结果。", "#28a745");
+    } catch (e) {
+        showMsg("加密出错了，请检查输入。", "#dc3545");
+    }
+}
 
-        // 加密逻辑
-        function handleEncrypt() {
-            var content = document.getElementById('input').value;
-            var password = document.getElementById('pwd').value;
-            
-            if (!content || !password) {
-                showMsg("内容和密码都不能少哦！", "#dc3545");
-                return;
-            }
+// 解密逻辑
+function handleDecrypt() {
+    var cipherText = document.getElementById('input').value;
+    var password = document.getElementById('pwd').value;
+    
+    if (!cipherText || !password) {
+        showMsg("请输入密文和密码！", "#dc3545");
+        return;
+    }
 
-            try {
-                // CryptoJS 内部会自动处理兼容性
-                var encrypted = CryptoJS.AES.encrypt(content, password).toString();
-                document.getElementById('output').value = encrypted;
-                showMsg("加密成功！请妥善保存结果。", "#28a745");
-            } catch (e) {
-                showMsg("加密出错了，请检查输入。", "#dc3545");
-            }
-        }
+    try {
+        var bytes = CryptoJS.AES.decrypt(cipherText, password);
+        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+        
+        if (!originalText) throw new Error("Key Wrong");
+        
+        document.getElementById('output').value = originalText;
+        showMsg("解密成功！", "#28a745");
+    } catch (e) {
+        showMsg("解密失败！密码错了或是密文损坏。", "#dc3545");
+        document.getElementById('output').value = "";
+    }
+}
 
-        // 解密逻辑
-        function handleDecrypt() {
-            var cipherText = document.getElementById('input').value;
-            var password = document.getElementById('pwd').value;
-            
-            if (!cipherText || !password) {
-                showMsg("请输入密文和密码！", "#dc3545");
-                return;
-            }
+// 复制逻辑
+function handleCopy() {
+    var outputText = document.getElementById('output');
+    if (!outputText.value) {
+        showMsg("没有内容可复制", "#dc3545");
+        return;
+    }
+    
+    outputText.select();
+    try {
+        document.execCommand('copy');
+        showMsg("已成功复制到剪贴板！", "#28a745");
+    } catch (err) {
+        showMsg("复制失败，请手动选择复制。", "#dc3545");
+    }
+}
 
-            try {
-                var bytes = CryptoJS.AES.decrypt(cipherText, password);
-                var originalText = bytes.toString(CryptoJS.enc.Utf8);
-                
-                if (!originalText) {
-                    throw new Error("Wrong Password");
-                }
-                
-                document.getElementById('output').value = originalText;
-                showMsg("解密成功！", "#28a745");
-            } catch (e) {
-                showMsg("解密失败！钥匙错了或是密文损坏。", "#dc3545");
-                document.getElementById('output').value = "";
-            }
-        }
-
-        // 复制逻辑
-        function handleCopy() {
-            var outputText = document.getElementById('output');
-            if (!outputText.value) {
-                showMsg("没有内容可复制", "#dc3545");
-                return;
-            }
-            
-            outputText.select();
-            try {
-                document.execCommand('copy');
-                showMsg("已成功复制到剪贴板！", "#28a745");
-            } catch (err) {
-                showMsg("复制失败，请手动选择复制。", "#dc3545");
-            }
-        }
-    </script>
+// 提示信息处理
+function showMsg(text, color) {
+    // 兼容老版本浏览器的默认参数写法
+    if (!color) color = "#666";
+    
+    var msg = document.getElementById('msg');
+    msg.innerText = text;
+    msg.style.color = color;
+    
+    // 兼容老版本浏览器的匿名函数写法
+    setTimeout(function() { 
+        if (msg.innerText === text) msg.innerText = ""; 
+    }, 3000);
+}
+</script>
 </body>
 </html>
