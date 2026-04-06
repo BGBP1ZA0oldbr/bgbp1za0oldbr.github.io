@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name='description' content='原站-AES 离线加密工具'>
     <title>AES 离线加密工具</title>
-    <script src="./crypto-js.min.js"></script>
+    <script src="script/crypto-js.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico">
     <style>
@@ -42,23 +42,23 @@
         <h1>AES 离线加密工具</h1>
         
         <p class="algo-tag">
-            🔒 安全协议：采用 <strong>AES-256-CBC</strong> 算法，完全离线运行。
+            安全协议：采用军用级 <strong>AES-256-CBC</strong> 算法，所有加解密过程均在本地浏览器完成，不上传任何明文数据。（ps：即使想偷也偷不了，因为网站本身就是静态的。）
         </p>
         
         <label for="input">输入原文或密文：</label>
-        <textarea id="input" placeholder="请输入内容..."></textarea>
+        <textarea id="input" placeholder="在这里输入要加密的内容，或者要解密的乱码..."></textarea>
 
-        <label for="pwd">解密钥匙 (Password)：</label>
-        <input type="password" id="pwd" placeholder="输入钥匙...">
+        <label for="pwd">设置密码 (Password)：</label>
+        <input type="password" id="pwd" placeholder="输入你的密码，务必牢记！">
 
         <div class="btn-group">
-            <button class="btn-encode" onclick="handleEncrypt()">🔒 加密</button>
-            <button class="btn-decode" onclick="handleDecrypt()">🔓 解密</button>
+            <button class="btn-encode" onclick="handleEncrypt()">加密</button>
+            <button class="btn-decode" onclick="handleDecrypt()">解密</button>
             <button class="btn-copy" onclick="handleCopy()">复制结果</button>
         </div>
 
         <label for="output">结果显示区：</label>
-        <textarea id="output" readonly placeholder="等待处理..."></textarea>
+        <textarea id="output" readonly placeholder="处理后的结果将显示在这里..."></textarea>
         
         <p id="msg" class="tips"></p>
     </div>
@@ -84,7 +84,7 @@
             var password = document.getElementById('pwd').value;
             
             if (!content || !password) {
-                showMsg("内容和钥匙都不能少哦！", "#dc3545");
+                showMsg("内容和密码都不能少哦！", "#dc3545");
                 return;
             }
 
@@ -92,9 +92,9 @@
                 // CryptoJS 内部会自动处理兼容性
                 var encrypted = CryptoJS.AES.encrypt(content, password).toString();
                 document.getElementById('output').value = encrypted;
-                showMsg("加密成功！", "#28a745");
+                showMsg("加密成功！请妥善保存结果。", "#28a745");
             } catch (e) {
-                showMsg("加密出错了。", "#dc3545");
+                showMsg("加密出错了，请检查输入。", "#dc3545");
             }
         }
 
@@ -104,7 +104,7 @@
             var password = document.getElementById('pwd').value;
             
             if (!cipherText || !password) {
-                showMsg("请输入密文和钥匙！", "#dc3545");
+                showMsg("请输入密文和密码！", "#dc3545");
                 return;
             }
 
@@ -119,7 +119,7 @@
                 document.getElementById('output').value = originalText;
                 showMsg("解密成功！", "#28a745");
             } catch (e) {
-                showMsg("解密失败！钥匙错误或密文不完整。", "#dc3545");
+                showMsg("解密失败！钥匙错了或是密文损坏。", "#dc3545");
                 document.getElementById('output').value = "";
             }
         }
@@ -135,9 +135,9 @@
             outputText.select();
             try {
                 document.execCommand('copy');
-                showMsg("已成功复制！", "#28a745");
+                showMsg("已成功复制到剪贴板！", "#28a745");
             } catch (err) {
-                showMsg("复制失败，请手动操作。", "#dc3545");
+                showMsg("复制失败，请手动选择复制。", "#dc3545");
             }
         }
     </script>
