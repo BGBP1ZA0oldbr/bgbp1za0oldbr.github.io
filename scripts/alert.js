@@ -1,4 +1,4 @@
-var currentMonth = new Date().getMonth();
+ var currentMonth = new Date().getMonth();
 
 // 只有在 6 月，且本次访问（Session）还没弹过窗时才触发
 if (currentMonth === 5 && !sessionStorage.getItem('pride_alert_shown')) {
