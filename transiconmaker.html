@@ -1,122 +1,576 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name='description' content='跨性别背景头像合成器'>
+    <meta name="description" content="跨性别背景头像合成器">
+
     <title>头像背景合成器</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico" >
-    
-    <style>
-        .avatar-tool { background: white; padding: 2rem; border-radius: 16px; text-align: center; margin: 20px auto; max-width: 500px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .avatar-tool canvas { max-width: 100%; height: auto; margin-top: 20px; border: 2px solid #eee; border-radius: 12px; display: none; }
-        .upload-area { display: block; margin: 25px 0; border: 2px dashed #55CDFC; padding: 20px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
-        .upload-area:hover { background-color: #faffff; border-color: #F7A8B8; }
-        #upload { display: none; }
-        .btn-save { background-color: #55CDFC; color: white; border: none; padding: 12px 24px; border-radius: 30px; cursor: pointer; text-decoration: none; display: none; font-weight: bold; margin-top: 15px; transition: 0.3s; }
-        .btn-save:hover { background-color: #F7A8B8; box-shadow: 0 4px 10px rgba(247, 168, 184, 0.4); }
-        .tool-desc { color: #888; font-size: 0.9rem; line-height: 1.5; }
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <style type="text/css">
+        .avatar-tool {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .avatar-tool canvas {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .upload-area {
+            display: block;
+            margin: 25px 0;
+            border: 2px dashed #55CDFC;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-area:hover {
+            background-color: #faffff;
+            border-color: #F7A8B8;
+        }
+
+        #upload {
+            display: none;
+        }
+
+        .btn-save {
+            background-color: #55CDFC;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            display: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #F7A8B8;
+            box-shadow: 0 4px 10px rgba(247, 168, 184, 0.4);
+        }
+
+        .tool-desc {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .error-text {
+            color: #F7A8B8;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
+
 <body>
+
     <header>
         <ul class="ys-head">
             <li><a href="index.html">首页</a></li>
             <li><a href="bayinhe.html">八音盒</a></li>
             <li><a href="shop.html">商城</a></li>
-            <li><a href="https://ys.mihoyo.com/cloud/#/">云原神</a></li>
+            <li>
+                <a href="https://ys.mihoyo.com/cloud/#/">
+                    云原神
+                </a>
+            </li>
             <li><a href="tools.html">工具合集</a></li>
         </ul>
     </header>
-    
+
     <nav class="banner">
         <img src="images/bann.png" alt="">
     </nav>
-    
+
     <div>
-        <h1 style="text-align: center; margin-top: 20px;">头像背景合成器</h1>
-        
+
+        <h1 style="text-align: center; margin-top: 20px;">
+            头像背景合成器
+        </h1>
+
         <div class="avatar-tool">
-            <p class="tool-desc">上传一张透明 PNG 图片，可自动且脱机地合成跨性别骄傲旗为底的背景。<br>下载时将以时间戳命名</p>
-            
+
+            <p class="tool-desc">
+                上传一张透明 PNG 图片，可自动且脱机地合成跨性别骄傲旗为底的背景。<br>
+                下载时将以时间戳命名
+            </p>
+
             <label for="upload" class="upload-area">
-                <span id="upload-text">点击或拖拽上传透明 PNG</span>
-                <input type="file" id="upload" >
+                <span id="upload-text">
+                    点击或拖拽上传透明 PNG
+                </span>
+
+                <input
+                    type="file"
+                    id="upload"
+                    accept="image/png"
+                >
             </label>
-            
+
+            <p id="error-text" class="error-text"></p>
+
             <canvas id="canvas"></canvas>
+
             <br>
-            <a id="download" class="btn-save">保存我的新头像</a>
+
+            <a
+                id="download"
+                class="btn-save"
+                href="#"
+            >
+                保存我的新头像
+            </a>
+
         </div>
 
-        <script>
-            // 使用 var 以确保在旧版浏览器中的兼容性
-            var upload = document.getElementById('upload');
-            var canvas = document.getElementById('canvas');
-            var ctx = canvas.getContext('2d');
-            var downloadBtn = document.getElementById('download');
-            var uploadText = document.getElementById('upload-text');
 
-            // 自定义补零函数，替代 ES6 的 padStart
-            function padLeft(num) {
-                return num < 10 ? '0' + num : '' + num;
+        <script type="text/javascript">
+
+            /*
+             * Chrome 46 兼容版
+             *
+             * 不使用：
+             * let
+             * const
+             * 箭头函数
+             * 模板字符串
+             * Promise
+             * async / await
+             * padStart
+             * Blob URL
+             */
+
+
+            var upload = document.getElementById("upload");
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var downloadBtn = document.getElementById("download");
+            var uploadText = document.getElementById("upload-text");
+            var errorText = document.getElementById("error-text");
+
+
+            /*
+             * 补零
+             */
+            function padLeft(number) {
+
+                if (number < 10) {
+                    return "0" + number;
+                }
+
+                return "" + number;
             }
 
-            // 时间戳+随机数命名函数 (兼容版)
+
+            /*
+             * 生成文件名
+             *
+             * transgender_icon_20260811152730123456.png
+             */
             function generateFileName() {
+
                 var now = new Date();
-                var y = now.getFullYear();
-                var m = padLeft(now.getMonth() + 1);
-                var d = padLeft(now.getDate());
-                var h = padLeft(now.getHours());
-                var min = padLeft(now.getMinutes());
-                var s = padLeft(now.getSeconds());
-                
-                // 生成6位随机数
-                var randomNum = Math.floor(Math.random() * 900000 + 100000);
-                
-                // 使用 + 号拼接字符串，替代反引号
-                return "transgender_icon_" + y + m + d + h + min + s + randomNum + ".png";
+
+                var year = now.getFullYear();
+                var month = padLeft(now.getMonth() + 1);
+                var day = padLeft(now.getDate());
+                var hour = padLeft(now.getHours());
+                var minute = padLeft(now.getMinutes());
+                var second = padLeft(now.getSeconds());
+
+                var randomNumber =
+                    Math.floor(Math.random() * 900000) + 100000;
+
+                return "transgender_icon_"
+                    + year
+                    + month
+                    + day
+                    + hour
+                    + minute
+                    + second
+                    + randomNumber
+                    + ".png";
             }
 
-            upload.addEventListener('change', function(e) {
-                var file = e.target.files[0];
-                if (!file) return;
 
-                uploadText.innerText = "已选择: " + file.name;
+            /*
+             * 显示错误
+             */
+            function showError(message) {
 
+                errorText.innerHTML = message;
+                errorText.style.display = "block";
+
+            }
+
+
+            /*
+             * 清除错误
+             */
+            function clearError() {
+
+                errorText.innerHTML = "";
+                errorText.style.display = "none";
+
+            }
+
+
+            /*
+             * 检查浏览器是否具备必要功能
+             */
+            function checkBrowserSupport() {
+
+                if (!window.FileReader) {
+
+                    showError(
+                        "你的浏览器不支持文件读取功能，请使用较新的浏览器。"
+                    );
+
+                    return false;
+                }
+
+                if (!window.HTMLCanvasElement) {
+
+                    showError(
+                        "你的浏览器不支持 Canvas，无法进行头像合成。"
+                    );
+
+                    return false;
+                }
+
+                return true;
+            }
+
+
+            /*
+             * 初始化
+             */
+            if (!checkBrowserSupport()) {
+
+                upload.disabled = true;
+
+            }
+
+
+            /*
+             * 文件选择
+             */
+            upload.addEventListener("change", function (event) {
+
+                clearError();
+
+                var file = null;
+
+                if (
+                    event &&
+                    event.target &&
+                    event.target.files &&
+                    event.target.files.length > 0
+                ) {
+
+                    file = event.target.files[0];
+
+                }
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                /*
+                 * 检查 MIME 类型
+                 *
+                 * 某些老浏览器可能不给出 type，
+                 * 所以只有明确不是 PNG 时才拒绝。
+                 */
+                if (
+                    file.type &&
+                    file.type.toLowerCase() !== "image/png"
+                ) {
+
+                    showError(
+                        "请选择 PNG 图片。"
+                    );
+
+                    uploadText.innerHTML =
+                        "点击或拖拽上传透明 PNG";
+
+                    return;
+                }
+
+
+                /*
+                 * 检查文件名
+                 *
+                 * 作为 MIME 类型检查的备用方案。
+                 */
+                var fileName =
+                    file.name || "";
+
+                var lowerName =
+                    fileName.toLowerCase();
+
+                if (
+                    file.type === "" &&
+                    lowerName.indexOf(".png") === -1
+                ) {
+
+                    showError(
+                        "请选择 PNG 图片。"
+                    );
+
+                    uploadText.innerHTML =
+                        "点击或拖拽上传透明 PNG";
+
+                    return;
+                }
+
+
+                uploadText.innerHTML =
+                    "已选择: " + fileName;
+
+
+                /*
+                 * FileReader
+                 */
                 var reader = new FileReader();
-                reader.onload = function(event) {
-                    var img = new Image();
-                    img.onload = function() {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        canvas.style.display = 'block';
 
-                        var colors = ['#55CDFC', '#F7A8B8', '#FFFFFF', '#F7A8B8', '#55CDFC'];
-                        var stripeHeight = canvas.height / 5;
-                        
-                        for (var i = 0; i < colors.length; i++) {
-                            ctx.fillStyle = colors[i];
-                            ctx.fillRect(0, i * stripeHeight, canvas.width, stripeHeight + 1);
+
+                reader.onload = function (event) {
+
+                    var image = new Image();
+
+
+                    /*
+                     * 图片加载完成
+                     */
+                    image.onload = function () {
+
+                        var width = image.width;
+                        var height = image.height;
+
+
+                        if (!width || !height) {
+
+                            showError(
+                                "无法读取图片尺寸。"
+                            );
+
+                            return;
                         }
 
-                        ctx.drawImage(img, 0, 0);
 
-                        downloadBtn.style.display = 'inline-block';
-                        downloadBtn.onclick = function() {
-                            var dataUrl = canvas.toDataURL("image/png");
-                            downloadBtn.href = dataUrl;
-                            downloadBtn.download = generateFileName();
-                        };
+                        /*
+                         * 设置 Canvas 尺寸
+                         */
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        canvas.style.display =
+                            "block";
+
+
+                        /*
+                         * 跨性别骄傲旗
+                         *
+                         * 蓝
+                         * 粉
+                         * 白
+                         * 粉
+                         * 蓝
+                         */
+                        var colors = [
+                            "#55CDFC",
+                            "#F7A8B8",
+                            "#FFFFFF",
+                            "#F7A8B8",
+                            "#55CDFC"
+                        ];
+
+
+                        var stripeHeight =
+                            height / 5;
+
+                        var i;
+
+
+                        /*
+                         * 绘制背景
+                         */
+                        for (
+                            i = 0;
+                            i < colors.length;
+                            i++
+                        ) {
+
+                            ctx.fillStyle =
+                                colors[i];
+
+                            ctx.fillRect(
+                                0,
+                                i * stripeHeight,
+                                width,
+                                stripeHeight + 1
+                            );
+                        }
+
+
+                        /*
+                         * 绘制用户头像
+                         *
+                         * PNG 自带透明部分，
+                         * 因此透明区域会显示下面的旗帜。
+                         */
+                        ctx.drawImage(
+                            image,
+                            0,
+                            0,
+                            width,
+                            height
+                        );
+
+
+                        /*
+                         * 生成 PNG Data URL
+                         */
+                        var dataUrl;
+
+                        try {
+
+                            dataUrl =
+                                canvas.toDataURL(
+                                    "image/png"
+                                );
+
+                        } catch (error) {
+
+                            showError(
+                                "头像合成失败，可能是图片尺寸过大。"
+                            );
+
+                            return;
+                        }
+
+
+                        /*
+                         * 设置下载链接
+                         */
+                        downloadBtn.href =
+                            dataUrl;
+
+                        downloadBtn.download =
+                            generateFileName();
+
+                        downloadBtn.style.display =
+                            "inline-block";
+
+
+                        /*
+                         * 防止旧浏览器在 href 更新后
+                         * 出现奇怪的跳转行为。
+                         */
+                        downloadBtn.onclick =
+                            function () {
+
+                                /*
+                                 * Chrome 46 支持 download 属性，
+                                 * 正常情况下直接下载。
+                                 */
+                                return true;
+                            };
+
                     };
-                    img.src = event.target.result;
+
+
+                    /*
+                     * 图片加载失败
+                     */
+                    image.onerror = function () {
+
+                        canvas.style.display =
+                            "none";
+
+                        downloadBtn.style.display =
+                            "none";
+
+                        showError(
+                            "图片读取失败，请确认这是有效的 PNG 图片。"
+                        );
+
+                    };
+
+
+                    /*
+                     * Data URL -> Image
+                     */
+                    image.src =
+                        event.target.result;
+
                 };
-                reader.readAsDataURL(file);
+
+
+                /*
+                 * 文件读取失败
+                 */
+                reader.onerror = function () {
+
+                    canvas.style.display =
+                        "none";
+
+                    downloadBtn.style.display =
+                        "none";
+
+                    showError(
+                        "文件读取失败。"
+                    );
+
+                };
+
+
+                /*
+                 * 读取 PNG
+                 */
+                try {
+
+                    reader.readAsDataURL(file);
+
+                } catch (error) {
+
+                    showError(
+                        "无法读取此文件。"
+                    );
+
+                }
+
             });
+
         </script>
+
     </div>
+
 </body>
 </html>
+```
